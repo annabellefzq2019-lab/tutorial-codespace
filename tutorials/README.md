@@ -8,7 +8,7 @@ You can try these tutorials in different environments. The concepts you'll learn
 
 ## Hello world
 
-In the [Hello world](https://learn.microsoft.comdotnet/csharp/tour-of-csharp/tutorials/hello-world) tutorial, you'll create the most basic C# program. You'll explore the `string` type and how to work with text.
+In the [Hello world]https://learn.microsoft.comdotnet/csharp/tour-of-csharp/tutorials/hello-world() tutorial, you'll create the most basic C# program. You'll explore the `string` type and how to work with text.
 
 ## Numbers in C\#
 
