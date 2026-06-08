@@ -23,24 +23,67 @@ string bankRecords = """
     """;
 
 double currentBalance = 0.0;
-var reader = new StringReader(bankRecords);
+// var reader = new StringReader(bankRecords);
 
-string? line;
-while ((line = reader.ReadLine()) is not null)
+// string? line;
+// while ((line = reader.ReadLine()) is not null)
+// {
+//     if (string.IsNullOrWhiteSpace(line)) continue;
+//     // Split the line based on comma delimiter and trim each part
+//     string[] parts = line.Split(',');
+
+//     string? transactionType = parts[0]?.Trim();
+//     if (double.TryParse(parts[1].Trim(), out double amount))
+//     {
+//         // Update the balance based on transaction type
+//         if (transactionType?.ToUpper() is "DEPOSIT")
+//             currentBalance += amount;
+//         else if (transactionType?.ToUpper() is "WITHDRAWAL")
+//             currentBalance -= amount;
+
+//         Console.WriteLine($"{line.Trim()} => Parsed Amount: {amount}, New Balance: {currentBalance}");
+//     }
+// }
+
+static IEnumerable<(TransactionType type, double amount)> TransactionRecords(string inputText)
 {
-    if (string.IsNullOrWhiteSpace(line)) continue;
-    // Split the line based on comma delimiter and trim each part
-    string[] parts = line.Split(',');
-
-    string? transactionType = parts[0]?.Trim();
-    if (double.TryParse(parts[1].Trim(), out double amount))
+    var reader = new StringReader(inputText);
+    string? line;
+    while ((line = reader.ReadLine()) is not null)
     {
-        // Update the balance based on transaction type
-        if (transactionType?.ToUpper() is "DEPOSIT")
-            currentBalance += amount;
-        else if (transactionType?.ToUpper() is "WITHDRAWAL")
-            currentBalance -= amount;
+        string[] parts = line.Split(',');
 
-        Console.WriteLine($"{line.Trim()} => Parsed Amount: {amount}, New Balance: {currentBalance}");
+        string? transactionType = parts[0]?.Trim();
+        if (double.TryParse(parts[1].Trim(), out double amount))
+        {
+            // Update the balance based on transaction type
+            if (transactionType?.ToUpper() is "DEPOSIT")
+                yield return (TransactionType.Deposit, amount);
+            else if (transactionType?.ToUpper() is "WITHDRAWAL")
+                yield return (TransactionType.Withdrawal, amount);
+        }
+        else
+        {
+            yield return (TransactionType.Invalid, 0.0);
+        }
+
+
     }
+}
+
+currentBalance = 0.0;
+
+foreach (var transaction in TransactionRecords(bankRecords))
+{
+    if (transaction.type == TransactionType.Deposit)
+        currentBalance += transaction.amount;
+    else if (transaction.type == TransactionType.Withdrawal)
+        currentBalance -= transaction.amount;
+    Console.WriteLine($"{transaction.type} => Parsed Amount: {transaction.amount}, New Balance: {currentBalance}");
+}
+public enum TransactionType
+{
+    Deposit,
+    Withdrawal,
+    Invalid
 }
